@@ -1,0 +1,26 @@
+{
+  "name": "adele",
+  "version": "1.0.0",
+  "description": "Websocket chat app with Frontend and Server",
+  "private": true,
+  "scripts": {
+    "install:all": "npm install && cd frontend && npm install && cd ../server && npm install",
+    "docker:up": "docker compose up -d postgres",
+    "docker:down": "docker compose down",
+    "db:connect": "cd server && npm run db:connect",
+    "sql:codegen": "cd server && npm run sql:codegen",
+    "dev": "zx scripts/dev.mjs",
+    "dev:mock": "zx scripts/dev-websocket.mjs",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:server": "cd server && npm run dev",
+    "dev:websocket-test-client": "cd server && npm run websocket-test-client"
+  },
+  "workspaces": [
+    "frontend",
+    "server"
+  ],
+  "devDependencies": {
+    "concurrently": "^9.1.0",
+    "zx": "^8.5.5"
+  }
+}

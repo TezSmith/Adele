@@ -1,0 +1,15 @@
+{
+  "transforms": [{
+    "mode": "sql",
+    "include": "**/*.sql",
+    "emitTemplate": "./repositories/types/{{name}}.pgqueries.ts"
+  }],
+  "srcDir": "./repositories/sql",
+  "db": {
+    "host": "localhost",
+    "port": 5432,
+    "user": "postgres",
+    "password": "postgres",
+    "dbName": "chat_db"
+  }
+}
