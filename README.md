@@ -1,6 +1,22 @@
 # Adele
 
-A full-stack chat application built with Vue.js and Node.js, featuring WebSocket communication and PostgreSQL message persistence.
+A full-stack chat application built with Vue.js and Node.js, featuring WebSocket communication and PostgreSQL message persistence. Like its namesake, it’s here to help you say “hello” in style.
+
+![Screenshot of Adele Chat App](./frontend/public/assets/adele-chat-screenshot.png)
+
+---
+
+## Features
+
+- Real-time messaging with WebSockets
+- PostgreSQL for message persistence
+- WebSocket echo test client for simulating users
+- Vue 3 + Pinia frontend with TypeScript
+- Typed SQL queries via pgTyped
+- Dockerized PostgreSQL for local development
+- Accessible, responsive design
+
+---
 
 ## Tech Stack
 
@@ -28,14 +44,15 @@ npm run install:all
 ```
 This will run `npm install` in this directory, as well as the frontend and server directories.
 
+2. Make sure Docker Desktop is running — the PostgreSQL container won’t start without it!
 
-2. Next, from this directory, start the development environment:
+3. To start the full development environment:
 ```bash
 npm run dev
 ````
-This will start the PostgreSQL database on Docker, the frontend development server, and the backend server.
+This will start frontend, backend, and Dockerized PostgreSQL database.
 
-Alternatively, to also include a WebSocket test client (see `WebSocket Test Client` below), you can run the following instead:
+Or, if you'd like to run the echo bot (see `WebSocket Test Client` below), you can run the following instead:
 ```bash
 npm run dev:mock
 ```
@@ -69,26 +86,42 @@ The application will then be available at:
 ```
 
 ## Schema "Migrations"
-If you want to do a database migration, add a new file to `server/db-init`, with your SQL
-schema changes, then restart the server. Make sure the SQL is idempotent (i.e. use statements like `CREATE TABLE IF NOT EXISTS`) as this rudimentary "migration" system runs every time the server starts up.
 
-If you want to clear the entire database, you can just restart the database with `npm run docker:down`then restart the dev environment.
+Add a `.sql` file to `server/db-init/` with your schema changes and restart the server. SQL should be idempotent (use `CREATE TABLE IF NOT EXISTS`) since the scripts run on each server boot.
+
+To reset the DB:
+```bash
+npm run docker:down
+npm run dev
+```
+---
 
 ## PgTyped Definitions
-This project uses a library called [PgTyped](https://pgtyped.dev/) that will generate TypeScript types of your SQL inputs and outputs. You can write your SQL queries in the appropriate `.sql` file, then run `npm run sql:codegen` (this is a watch command, so you could also just always have it running). 
+We use [PgTyped](https://pgtyped.dev/) to generate types for SQL input/output. Write your queries in `.sql` files, then run:
 
-The command generates the appropriate types in a `<entity>.pgqueries.ts` file that matches the `<entity>.sql` file name. You can then import the `<entity>.pgqueries.ts` file and call those methods to execute your SQL.
+```bash
+npm run sql:codegen
+```
 
-### Quick PgTyped Notes
-Input parameters are suffixed with `:`, so for example, to get all the messages by a user id, you would do `WHERE user_id = :userId`. If you add a `!` at the end of the
-input variable, it tells PgTyped to make the input parameter required (`WHERE user_id = :userId!`), otherwise
-it's optional.
+> PgTyped watch mode is on by default for dev.
+
+**Quick tip:**  
+Use `:paramName` for input variables, and `:paramName!` to make them required.
+
+---
 
 ## WebSocket Test Client
-To simulate having a partner in the chat that simply echos back whatever you have written
-a second later, you can start up the WebSocket test client, either by starting it with
-the rest of the development environment with `npm run dev:mock`, or on its own with 
-`npm run dev:websocket-test-client`.
+Simulate another user in the chat! You can start the echo bot with:
+
+```bash
+npm run dev:websocket-test-client
+```
+
+Or include it with the rest of your environment using:
+
+```bash
+npm run dev:mock
+```
 
 ## Available Scripts
 
