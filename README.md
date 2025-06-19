@@ -52,7 +52,7 @@ npm run dev
 ````
 This will start frontend, backend, and Dockerized PostgreSQL database.
 
-Or, if you'd like to run the echo bot (see `WebSocket Test Client` below), you can run the following instead:
+Or, if you'd like to run the echo bot (see the `WebSocket Test Client` section below), you can run the following instead:
 ```bash
 npm run dev:mock
 ```
@@ -60,6 +60,23 @@ npm run dev:mock
 The application will then be available at:
 - Frontend: http://localhost:8080
 - Backend: http://localhost:3000
+
+## Start Chatting!
+
+To simulate a real conversation between two users:
+
+1. Start the app as usual:
+```bash
+npm run dev
+```
+
+2. Open **two browser windows**:
+   - One in a regular (public) tab
+   - One in an **incognito/private** tab
+
+3. Navigate to [http://localhost:8080](http://localhost:8080) in both tabs.
+
+Each window will act as a separate user, allowing you to test sending and receiving real-time messages.
 
 ## Project Structure
 

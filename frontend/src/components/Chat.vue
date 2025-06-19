@@ -12,6 +12,10 @@
     elevation="1"
   >
 
+    <div v-if="!isConnected" class="text-subtitle-2 text-grey mb-2 text-center">
+      🔄 Connecting to chat...
+    </div>
+
     <div class="messages-container flex-grow-1" ref="messages-container" v-if="starterMessages.length > 0">
       <v-row v-for="message in starterMessages" :key="message.text" class="mb-2">
         <v-col>
