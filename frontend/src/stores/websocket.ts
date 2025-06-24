@@ -14,7 +14,6 @@ export interface StarterMessage {
   text: string
 }
 
-
 export const useWebSocketStore = defineStore('websocket', () => {
   const socket = ref<WebSocket | null>(null)
   const messages = ref<Message[]>([])
@@ -58,11 +57,10 @@ export const useWebSocketStore = defineStore('websocket', () => {
       socket.value.onmessage = async (event) => {
         try {
           const parsedData = JSON.parse(event.data)
-          console.log('INCOMING', parsedData)
 
           if (parsedData) {
             if (parsedData.type === 'starter') {
-              starterMessages.value = parsedData.starters.reverse()
+              starterMessages.value = parsedData.starters;
             } else if (parsedData.type === 'history') {
               messages.value = parsedData.messages.reverse()
             } else {
@@ -70,11 +68,7 @@ export const useWebSocketStore = defineStore('websocket', () => {
             }
           }
 
-          // if (Array.isArray(parsedData)) {
-          //   messages.value = parsedData.reverse()
-          // } else {
-          //   messages.value.push(parsedData)
-          // }
+
         } catch (error) {
           console.error('Error processing message:', error)
           errorMessage.value = 'Error processing message.'

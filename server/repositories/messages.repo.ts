@@ -22,7 +22,7 @@ export async function insertMessage(
 }
 
 export async function getRecentMessages(
-  limit: number = 50
+  limit: number = 5
 ): Promise<Message[]> {
   return pg.getRecentMessages.run(
     { limit },
