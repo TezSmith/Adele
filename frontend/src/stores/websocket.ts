@@ -117,6 +117,15 @@ export const useWebSocketStore = defineStore('websocket', () => {
     }
   }
 
+  function addMessage(text: string) {
+    const message: Message = {
+      text,
+      uuid: 'coach',
+      timestamp: Date.now(),
+    }
+    messages.value.push(message)
+  }
+
   onMounted(() => {
     checkBackend()
     connect()
@@ -136,6 +145,7 @@ export const useWebSocketStore = defineStore('websocket', () => {
     connect,
     disconnect,
     sendMessage,
-    startChat
+    startChat,
+    addMessage
   }
 })

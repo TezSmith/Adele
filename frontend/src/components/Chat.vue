@@ -109,20 +109,15 @@ async function sendMessage(text: string) {
   const trimmed = text.trim()
   if (!trimmed || !isConnected.value) return
 
-  // 1. Send user's message over WebSocket (current behavior)
   store.sendMessage(trimmed)
   currentMessage.value = ''
 
-  // 2. Call OpenAI-powered coach endpoint
   try {
     const coachReply = await getSmartReply(trimmed)
 
     if (coachReply) {
       console.log('Coach reply:', coachReply)
-      // messages.value = [
-      //   ...messages.value,
-      //   { text: coachReply, uuid: 'coach', timestamp: new Date().toISOString() },
-      // ]
+      store.addMessage(coachReply)
     }
   } catch (err) {
     console.error('Failed to fetch coach reply:', err)
