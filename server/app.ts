@@ -1,3 +1,6 @@
+import dotenv from 'dotenv'
+dotenv.config();
+
 import express from 'express'
 import cors from 'cors'
 import { createServer } from 'http'
@@ -5,7 +8,8 @@ import { setupWebSocketServer } from './services/websocket.service'
 import { ensureDbConnection, closeDbConnection, initializeDatabase } from './services/database.service'
 import { SERVER_CONFIG } from './config/server.config'
 import { errorHandler, notFoundHandler } from './middleware/error.middleware'
-import { healthRoutes } from './routes/health.routes'
+import healthRoutes from './routes/health.routes'
+import coachRoutes from './routes/coach.routes'
 
 try {
   run()
@@ -28,6 +32,7 @@ async function run() {
   app.use(express.urlencoded({ extended: true }))
 
   app.use('/health', healthRoutes)
+  app.use('/coach', coachRoutes)
   app.use(notFoundHandler)
   app.use(errorHandler)
 

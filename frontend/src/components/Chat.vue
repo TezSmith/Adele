@@ -73,18 +73,22 @@
 
 <script setup lang="ts">
 import { computed, nextTick, ref, useTemplateRef, watch } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useWebSocketStore } from '@/stores/websocket'
 
 const store = useWebSocketStore()
 const currentMessage = ref('')
 const showError = ref(false)
 
+
 const messagesContainer = useTemplateRef<HTMLDivElement>('messages-container')
-const messages = computed(() => store.messages)
+// const messages = computed(() => store.messages)
 const starterMessages = computed(() => store.starterMessages)
 const isConnected = computed(() => store.isConnected)
 const errorMessage = computed(() => store.errorMessage)
 const uuid = computed(() => store.uuid)
+
+const { messages }  = storeToRefs(store)
 
 watch(errorMessage, () => {
   showError.value = !!errorMessage.value
@@ -101,16 +105,50 @@ watch(
   { deep: true },
 )
 
-function sendMessage(text: string) {
-  if (text.trim() && isConnected.value) {
-    store.sendMessage(text.trim())
-    currentMessage.value = ''
+async function sendMessage(text: string) {
+  const trimmed = text.trim()
+  if (!trimmed || !isConnected.value) return
+
+  store.sendMessage(trimmed)
+  currentMessage.value = ''
+
+  try {
+    const coachReply = await getSmartReply(trimmed)
+
+    if (coachReply) {
+      console.log('Coach reply:', coachReply)
+      store.addMessage(coachReply)
+    }
+  } catch (err) {
+    console.error('Failed to fetch coach reply:', err)
   }
 }
+
 
 function startChat(text: string) {
   store.startChat(text.trim())
 }
+
+const getSmartReply = async (prompt: string) => {
+  try {
+    const res = await fetch('http://localhost:3000/coach', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ prompt }),
+    });
+
+    if (!res.ok) throw new Error(`API error: ${res.status}`);
+
+    const data = await res.json();
+    console.log('coach response:', data.reponse);
+    return data.response || ''
+  } catch (err) {
+    console.error('Error fetching smart reply:', err);
+    return null;
+  }
+};
 
 </script>
 
